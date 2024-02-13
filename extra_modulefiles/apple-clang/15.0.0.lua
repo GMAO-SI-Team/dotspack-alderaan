@@ -1,8 +1,4 @@
 -- -*- lua -*-
--- Module file created by spack (https://github.com/spack/spack) on 2024-01-24 12:29:14.591974
---
--- apple-clang@15.0.0%apple-clang@15.0.0 build_system=bundle arch=darwin-ventura-m1/qff2gey
---
 
 whatis([[Name : apple-clang]])
 whatis([[Version : 15.0.0]])

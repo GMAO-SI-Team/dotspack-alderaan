@@ -1,41 +1,53 @@
-# dotspack for Alderaan
+# dotspack for Dagobah
 
-This is a collection of .spack files for Alderaan
+This is a collection of .spack files for dagobah
 
-## Environmental Settings
+## Clone spack
 
-I currently have set in .bashrc:
+First, we need spack. Below we assume we clone spack into `$HOME/spack`.
 
-### All times
-
-```
-OS_VERSION=$(grep VERSION_ID /etc/os-release | cut -d= -f2 | cut -d. -f1 | sed 's/"//g')
-
-export SIPROJ=/discover/nobackup/projects/gmao/SIteam
-export SPACK_ROOT=$SIPROJ/spack
+```bash
+git clone -c feature.manyFiles=true https://github.com/spack/spack.git
 ```
 
-The `OS_VERSION` is used to distinguish between SLES15 and SLES12.
+## Environment
 
-### On prompt
-
-Note here we need to make a distinction between the OS versions on discover. At the moment,
-all tests have been done on the SLES15 machine.
+### .zshenv
 
 ```
-   export SPACK_SKIP_MODULES=1
-   if [[ "$OS_VERSION" == "15" ]]; then
-      export SPACK_PYTHON=/usr/local/other/GEOSpyD/23.5.2-0_py3.11/2023-11-02/bin/python3
+export SPACK_ROOT=$HOME/spack
+```
+
+### .zshrc
+
+```
+# Only run these if SPACK_ROOT is defined
+if [ ! -z ${SPACK_ROOT} ]
+then
+   . ${SPACK_ROOT}/share/spack/setup-env.sh
+
+   # Next, we need to determine our macOS by *name*. So, we need to have a
+   # variable that resolves to "ventura" or "sonoma".
+
+   OS_VERSION=$(sw_vers --productVersion | cut -d. -f1)
+   if [[ $OS_VERSION == 13 ]]
+   then
+      OS_NAME='ventura'
+   elif [[ $OS_VERSION == 14 ]]
+   then
+      OS_NAME='sonoma'
+   else
+      OS_NAME='unknown'
    fi
-   . $SPACK_ROOT/share/spack/setup-env.sh
 
-
-   if [[ "$OS_VERSION" == "15" ]]; then
-      module use -a $SPACK_ROOT/share/spack/lmod/linux-sles15-x86_64/Core
-   fi
+   module use ${SPACK_ROOT}/share/spack/lmod/darwin-$OS_NAME-aarch64/Core
+fi
 ```
 
-### Needed brew packages
+We need the OS_NAME variable to determine which lmod files to use as a laptop might be on 
+either ventura or sonoma.
+
+## Homebrew
 
 These are based on those from spack-stack
 
@@ -54,11 +66,236 @@ brew install qt@5
 brew install mysql
 ```
 
-### config.yaml
+## Spack Configuration
 
-Note that to keep the build and misc caches out of the home directory, I have set:
+### config
+
+Set the number of build_jobs to 6 (or whatever you want)
+
+```bash
+spack config add config:build_jobs:6
+```
+
+### compilers
+
+Now we have Spack find the compilers on our system:
+```bash
+spack compiler find
+```
+
+For example, I got:
+```bash
+❯ spack compiler find
+==> Added 4 new compilers to /Users/mathomp4/.spack/darwin/compilers.yaml
+    gcc@13.2.0  gcc@12.3.0  gcc@12.2.0  apple-clang@15.0.0
+==> Compilers are defined in the following files:
+    /Users/mathomp4/.spack/darwin/compilers.yaml
+```
+
+Of these, we will focus on apple-clang. So now we need to fix up the compilers.yaml file to
+point to `gfortran-12` from brew. So first, run `which gfortran-12` to get the path to the
+gfortran-12 executable. On dagobah it is:
+```bash
+❯ which gfortran-12
+/Users/mathomp4/.homebrew/brew/bin/gfortran-12
+```
+
+Then, edit the compilers.yaml file with `spack config edit compilers` and change:
 
 ```yaml
-  build_stage: /discover/nobackup/projects/gmao/SIteam/spack-cache/stage
-  misc_cache: /discover/nobackup/projects/gmao/SIteam/spack-cache/misc
+- compiler:
+    spec: apple-clang@=15.0.0
+    paths:
+      cc: /usr/bin/clang
+      cxx: /usr/bin/clang++
+      f77: /usr/local/bin/gfortran
+      fc: /usr/local/bin/gfortran
+    flags: {}
+    operating_system: ventura
+    target: aarch64
+    modules: []
+    environment: {}
+    extra_rpaths: []
 ```
+to:
+```yaml
+- compiler:
+    spec: apple-clang@=15.0.0
+    paths:
+      cc: /usr/bin/clang
+      cxx: /usr/bin/clang++
+      f77: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
+      fc: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
+    flags: {}
+    operating_system: ventura
+    target: aarch64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+```
+
+### packages
+
+Now we can use `spack external find` to find the packages we need already in homebrew. But,
+we want to exclude some packages that experimentation has found should be built by spack.
+
+
+```bash
+spack external find --exclude bison --exclude openssl \
+   --exclude gmake --exclude m4 --exclude curl --exclude python \
+   --exclude gettext
+```
+
+#### Additional settings
+
+Now edit the packages.yaml file with `spack config edit packages` and add the following:
+
+```yaml
+  all:
+    compiler: [apple-clang@15.0.0]
+    providers:
+      mpi: [openmpi]
+      blas: [openblas]
+      lapack: [openblas]
+  hdf5:
+    variants: +fortran +szip +hl +threadsafe +mpi
+    # Note that cdo requires threadsafe, but hdf5 doesn't
+    # seem to want that with parallel. Hmm.
+  netcdf-c:
+    variants: +hdf4 +dap
+  esmf:
+    variants: ~pnetcdf ~xerces ~external-parallelio
+  cdo:
+    variants: ~proj ~fftw3
+    # cdo wanted a lot of extra stuff for proj and fftw3. Turn off for now
+  pflogger:
+    variants: +mpi
+  pfunit:
+    variants: +mpi +fhamcrest
+  fms:
+    variants: ~gfs_phys +pic ~quad_precision +yaml constants=GEOS precision=32,64
+  mapl:
+    variants: +extdata2g +fargparse +pflogger +pfunit ~pnetcdf
+```
+
+These are based on how we expect libraries to be built for GEOS and MAPL.
+
+### modules
+
+Next setup the `modules.yaml` file to look like:
+
+```yaml
+modules:
+  default:
+    'enable:':
+    - lmod
+    lmod:
+      core_compilers:
+      - apple-clang@15.0.0
+      hierarchy:
+      - mpi
+      hash_length: 0
+      include:
+      - apple-clang
+      all:
+        suffixes:
+          +debug: 'debug'
+          build_type=Debug: 'debug'
+      hdf5:
+        suffixes:
+          ~shared: 'static'
+      esmf:
+        suffixes:
+          ~shared: 'static'
+          esmf_pio=OFF: 'nopio'
+  prefix_inspections:
+    lib64: [LD_LIBRARY_PATH]
+    lib:
+    - LD_LIBRARY_PATH
+```
+
+#### Extra apple-clang module
+
+Spack is not able to create a modulefile for apple-clang since it is a
+builtin compiler or something. But, we want to have a modulefile for it
+so we can have `FC`, `CC` etc. set in the environment. So we make one. There
+is a copy in the `extra_modulefiles` directory. Copy it to the right place:
+
+```bash
+cp -a extra_modulefiles/apple-clang $SPACK_ROOT/share/spack/lmod/darwin-ventura-aarch64/Core/
+```
+
+## Spack Install
+
+Now we install packages.
+
+```bash
+spack install python py-numpy py-pyyaml py-ruamel-yaml
+spack install openmpi
+spack install esmf
+spack install gftl gftl-shared fargparse pfunit pflogger yafyaml
+```
+
+## Building GEOS and MAPL
+
+### Loading modules
+
+If you are using the module way of loading spack, you need to do:
+
+```bash
+module load apple-clang openmpi esmf python py-pyyaml py-numpy pfunit pflogger fargparse zlib-ng
+```
+
+This might be too much, but it works.
+
+### spack load
+
+If you do `spack load` you need to do:
+
+```bash
+spack load openmpi esmf python py-pyyaml py-numpy pfunit pflogger fargparse zlib-ng
+```
+but now whenever you run CMake, you need to tell it where to find the
+compilers:
+```bash
+cmake ... -DCMAKE_Fortran_COMPILER=gfortran-12 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+```
+
+### MAPL
+
+No changes were needed for MAPL
+
+### GEOS
+
+#### Building
+
+To build GEOS a fix is currently needed in `GEOSgcm_GridComp`, see
+
+https://github.com/GEOS-ESM/GEOSgcm_GridComp/pull/888
+
+==> Now in `develop`
+
+Remember also to add all the CMake compiler strings if using `spack load`
+
+#### Running
+
+You'll need to update the `gcm_run.j` to not use `g5_modules` and instead use the spack modules.
+
+So comment out:
+
+```csh
+#source $GEOSBIN/g5_modules
+#setenv DYLD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${BASEDIR}/${ARCH}/lib:${GEOSDIR}/lib
+```
+and add:
+
+```csh
+source $LMOD_PKG/init/csh
+module use -a $SPACK_ROOT/share/spack/lmod/darwin-ventura-aarch64/Core
+module load apple-clang openmpi esmf python py-pyyaml py-numpy pfunit pflogger fargparse zlib-ng
+module list
+setenv DYLD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${GEOSDIR}/lib
+```
+
+Note that `LMOD_PKG` seems to be defined by the brew lmod installation...though not sure.
+You might just need to put in a full path or something.

@@ -95,10 +95,6 @@ packages:
     externals:
     - spec: pkg-config@0.29.2
       prefix: /Users/mathomp4/.homebrew/brew
-  sed:
-    externals:
-    - spec: sed@4.9
-      prefix: /Users/mathomp4
   subversion:
     externals:
     - spec: subversion@1.14.3
