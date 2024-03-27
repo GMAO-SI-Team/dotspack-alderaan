@@ -17,6 +17,12 @@ modules:
       hdf5:
         suffixes:
           ~shared: 'static'
+      netcdf-c:
+        suffixes:
+          ~shared: 'static'
+      netcdf-fortran:
+        suffixes:
+          ~shared: 'static'
       esmf:
         suffixes:
           ~shared: 'static'
