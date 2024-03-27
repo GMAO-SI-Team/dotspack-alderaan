@@ -16,7 +16,7 @@ help([[Apple's Clang compiler]])
 family("compiler")
 
 -- Loading this module unlocks the path below unconditionally
-prepend_path("MODULEPATH", "/Users/mathomp4/spack/share/spack/lmod/darwin-ventura-aarch64/Core")
+prepend_path("MODULEPATH", "/Users/mathomp4/spack/share/spack/lmod/darwin-sonoma-aarch64/Core")
 
 -- set the compiler environment variables
 setenv("CC","/usr/bin/clang")

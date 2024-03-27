@@ -2,6 +2,28 @@
 
 This is a collection of .spack files for dagobah
 
+## Homebrew
+
+These are based on those from spack-stack
+
+```bash
+brew install coreutils
+brew install gcc@12
+brew install git
+brew install lmod
+brew install wget
+brew install bash
+brew install curl
+brew install cmake
+brew install openssl
+```
+
+### .zshenv
+
+Add to .zshenv:
+```bash 
+. $(brew --prefix)/opt/lmod/init/zsh
+```
 ## Clone spack
 
 First, we need spack. Below we assume we clone spack into `$HOME/spack`.
@@ -48,24 +70,6 @@ fi
 We need the OS_NAME variable to determine which lmod files to use as a laptop might be on 
 either ventura or sonoma.
 
-## Homebrew
-
-These are based on those from spack-stack
-
-```bash
-brew install coreutils
-brew install gcc@12
-brew install git
-brew install git-lfs
-brew install lmod
-brew install wget
-brew install bash
-brew install curl
-brew install cmake
-brew install openssl
-brew install qt@5
-brew install mysql
-```
 
 ## Spack Configuration
 
@@ -112,7 +116,7 @@ Then, edit the compilers.yaml file with `spack config edit compilers` and change
       f77: /usr/local/bin/gfortran
       fc: /usr/local/bin/gfortran
     flags: {}
-    operating_system: ventura
+    operating_system: sonoma
     target: aarch64
     modules: []
     environment: {}
@@ -128,7 +132,7 @@ to:
       f77: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
       fc: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
     flags: {}
-    operating_system: ventura
+    operating_system: sonoma
     target: aarch64
     modules: []
     environment: {}
@@ -183,7 +187,7 @@ These are based on how we expect libraries to be built for GEOS and MAPL.
 
 ### modules
 
-Next setup the `modules.yaml` file to look like:
+Next setup the `modules.yaml` file to look like this by running `spack config edit modules`:
 
 ```yaml
 modules:
@@ -215,16 +219,6 @@ modules:
     - LD_LIBRARY_PATH
 ```
 
-#### Extra apple-clang module
-
-Spack is not able to create a modulefile for apple-clang since it is a
-builtin compiler or something. But, we want to have a modulefile for it
-so we can have `FC`, `CC` etc. set in the environment. So we make one. There
-is a copy in the `extra_modulefiles` directory. Copy it to the right place:
-
-```bash
-cp -a extra_modulefiles/apple-clang $SPACK_ROOT/share/spack/lmod/darwin-ventura-aarch64/Core/
-```
 
 ## Spack Install
 
@@ -237,9 +231,31 @@ spack install esmf
 spack install gftl gftl-shared fargparse pfunit pflogger yafyaml
 ```
 
+### Regenerate Modules
+
+Sometimes spack needs a nudge to generate lmod files. This can be done (at any time) with:
+
+```bash
+spack module lmod refresh --delete-tree -y
+```
+
+### Extra apple-clang module
+
+Spack is not able to create a modulefile for apple-clang since it is a
+builtin compiler or something. But, we want to have a modulefile for it
+so we can have `FC`, `CC` etc. set in the environment. So we make one. There
+is a copy in the `extra_modulefiles` directory. Copy it to the right place:
+
+```bash
+cp -a extra_modulefiles/apple-clang $SPACK_ROOT/share/spack/lmod/darwin-sonoma-aarch64/Core/
+```
+
+Note that the Spack lmod directory won't be created until you run a first `spack install` command.
+
+
 ## Building GEOS and MAPL
 
-### Loading modules
+### Loading lmodules (recommended)
 
 If you are using the module way of loading spack, you need to do:
 
@@ -256,27 +272,27 @@ If you do `spack load` you need to do:
 ```bash
 spack load openmpi esmf python py-pyyaml py-numpy pfunit pflogger fargparse zlib-ng
 ```
-but now whenever you run CMake, you need to tell it where to find the
-compilers:
+
+### Build command
+
+The usual CMake commmand can be used to build GEOS or MAPL:
+
 ```bash
-cmake ... -DCMAKE_Fortran_COMPILER=gfortran-12 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+cmake -B build -S . --install-prefix=$(pwd)/install --fresh
+cmake --build build --target install -j 6
 ```
+
+NOTE: If you used `spack load` you'll need to supply the compilers to the first command:
+```
+cmake -B build -S . --install-prefix=$(pwd)/install --fresh -DCMAKE_Fortran_COMPILER=gfortran-12 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+```
+as `spack load` does not populate `FC`, `CC` and `CXX`.
 
 ### MAPL
 
 No changes were needed for MAPL
 
 ### GEOS
-
-#### Building
-
-To build GEOS a fix is currently needed in `GEOSgcm_GridComp`, see
-
-https://github.com/GEOS-ESM/GEOSgcm_GridComp/pull/888
-
-==> Now in `develop`
-
-Remember also to add all the CMake compiler strings if using `spack load`
 
 #### Running
 
@@ -292,7 +308,7 @@ and add:
 
 ```csh
 source $LMOD_PKG/init/csh
-module use -a $SPACK_ROOT/share/spack/lmod/darwin-ventura-aarch64/Core
+module use -a $SPACK_ROOT/share/spack/lmod/darwin-sonoma-aarch64/Core
 module load apple-clang openmpi esmf python py-pyyaml py-numpy pfunit pflogger fargparse zlib-ng
 module list
 setenv DYLD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${GEOSDIR}/lib
