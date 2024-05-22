@@ -8,7 +8,7 @@ These are based on those from spack-stack
 
 ```bash
 brew install coreutils
-brew install gcc@12
+brew install gcc@13
 brew install git
 brew install lmod
 brew install wget
@@ -98,11 +98,11 @@ For example, I got:
 ```
 
 Of these, we will focus on apple-clang. So now we need to fix up the compilers.yaml file to
-point to `gfortran-12` from brew. So first, run `which gfortran-12` to get the path to the
-gfortran-12 executable. On dagobah it is:
+point to `gfortran-13` from brew. So first, run `which gfortran-13` to get the path to the
+gfortran-13 executable. On dagobah it is:
 ```bash
-❯ which gfortran-12
-/Users/mathomp4/.homebrew/brew/bin/gfortran-12
+❯ which gfortran-13
+/Users/mathomp4/.homebrew/brew/bin/gfortran-13
 ```
 
 Then, edit the compilers.yaml file with `spack config edit compilers` and change:
@@ -129,8 +129,8 @@ to:
     paths:
       cc: /usr/bin/clang
       cxx: /usr/bin/clang++
-      f77: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
-      fc: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
+      f77: /Users/mathomp4/.homebrew/brew/bin/gfortran-13
+      fc: /Users/mathomp4/.homebrew/brew/bin/gfortran-13
     flags: {}
     operating_system: sonoma
     target: aarch64
@@ -284,7 +284,7 @@ cmake --build build --target install -j 6
 
 NOTE: If you used `spack load` you'll need to supply the compilers to the first command:
 ```
-cmake -B build -S . --install-prefix=$(pwd)/install --fresh -DCMAKE_Fortran_COMPILER=gfortran-12 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+cmake -B build -S . --install-prefix=$(pwd)/install --fresh -DCMAKE_Fortran_COMPILER=gfortran-13 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 ```
 as `spack load` does not populate `FC`, `CC` and `CXX`.
 
