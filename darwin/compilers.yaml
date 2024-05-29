@@ -26,7 +26,7 @@ compilers:
     environment: {}
     extra_rpaths: []
 - compiler:
-    spec: gcc@=13.2.0
+    spec: gcc@=13.3.0
     paths:
       cc: /Users/mathomp4/.homebrew/brew/bin/gcc-13
       cxx: /Users/mathomp4/.homebrew/brew/bin/g++-13
