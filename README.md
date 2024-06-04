@@ -206,6 +206,9 @@ modules:
         suffixes:
           +debug: 'debug'
           build_type=Debug: 'debug'
+        environment:
+          set:
+            '{name}_ROOT': '{prefix}'
       hdf5:
         suffixes:
           ~shared: 'static'
