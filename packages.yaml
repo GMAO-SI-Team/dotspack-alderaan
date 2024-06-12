@@ -21,9 +21,11 @@ packages:
   pfunit:
     variants: +mpi +fhamcrest
   fms:
-    variants: ~gfs_phys +pic ~quad_precision +yaml constants=GEOS precision=32,64
+    variants: ~gfs_phys +pic +yaml constants=GEOS precision=32,64 +deprecated_io
   mapl:
     variants: +extdata2g +fargparse +pflogger +pfunit ~pnetcdf
+  sz3:
+    variants: +hdf5
 
   coreutils:
     externals:
