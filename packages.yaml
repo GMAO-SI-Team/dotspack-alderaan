@@ -1,6 +1,7 @@
 packages:
   all:
-    compiler: [apple-clang@15.0.0]
+    compiler: [apple-clang@15.0.0, gcc@13.3.0, gcc@14.1.0]
+    #compiler: [apple-clang@15.0.0]
     providers:
       mpi: [openmpi]
       blas: [openblas]
@@ -49,7 +50,7 @@ packages:
       prefix: /Users/mathomp4/.homebrew/brew
   cmake:
     externals:
-    - spec: cmake@3.28.1
+    - spec: cmake@3.30.2
       prefix: /Users/mathomp4/.homebrew/brew
   cvs:
     externals:
@@ -61,7 +62,7 @@ packages:
       prefix: /usr
   git:
     externals:
-    - spec: git@2.43.0+tcltk
+    - spec: git@2.46.0+tcltk
       prefix: /Users/mathomp4/.homebrew/brew
     - spec: git@2.39.3~tcltk
       prefix: /usr
