@@ -1,4 +1,4 @@
-# dotspack for Dagobah
+# dotspack for Alderaan
 
 This is a collection of .spack files for dagobah
 
