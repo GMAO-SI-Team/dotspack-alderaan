@@ -1,7 +1,6 @@
 packages:
   all:
-    compiler: [apple-clang@15.0.0, gcc@13.3.0, gcc@14.1.0]
-    #compiler: [apple-clang@15.0.0]
+    compiler: [apple-clang@15.0.0]
     providers:
       mpi: [openmpi]
       blas: [openblas]
@@ -22,7 +21,7 @@ packages:
   pfunit:
     variants: +mpi +fhamcrest
   fms:
-    variants: ~gfs_phys +pic +yaml constants=GEOS precision=32,64 +deprecated_io
+    variants: precision=32,64 +quad_precision ~gfs_phys +openmp +pic constants=GEOS build_type=Release +deprecated_io
   mapl:
     variants: +extdata2g +fargparse +pflogger +pfunit ~pnetcdf
   sz3:
