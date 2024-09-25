@@ -257,6 +257,7 @@ spack install openmpi
 spack install esmf
 spack install gftl gftl-shared fargparse pfunit pflogger yafyaml
 spack install mepo
+spack install udunits
 ```
 
 ### Regenerate Modules
