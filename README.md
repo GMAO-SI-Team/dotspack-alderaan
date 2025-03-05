@@ -73,15 +73,15 @@ then
    . ${SPACK_ROOT}/share/spack/setup-env.sh
 
    # Next, we need to determine our macOS by *name*. So, we need to have a
-   # variable that resolves to "ventura" or "sonoma".
+   # variable that resolves to "sonoma" or "sequoia"
 
    OS_VERSION=$(sw_vers --productVersion | cut -d. -f1)
-   if [[ $OS_VERSION == 13 ]]
-   then
-      OS_NAME='ventura'
-   elif [[ $OS_VERSION == 14 ]]
+   if [[ $OS_VERSION == 14 ]]
    then
       OS_NAME='sonoma'
+   elif [[ $OS_VERSION == 15 ]]
+   then
+      OS_NAME='sequoia'
    else
       OS_NAME='unknown'
    fi
@@ -171,7 +171,7 @@ we want to exclude some packages that experimentation has found should be built 
 ```bash
 spack external find --exclude bison --exclude openssl \
    --exclude gmake --exclude m4 --exclude curl --exclude python \
-   --exclude gettext --exclude perl
+   --exclude gettext --exclude perl --exclude meson
 ```
 
 #### Additional settings
@@ -260,6 +260,11 @@ spack install mepo
 spack install udunits
 ```
 
+This could just as well be:
+```bash
+spack install --only dependents [geosgcm|mapl]
+```
+
 ### Regenerate Modules
 
 Sometimes spack needs a nudge to generate lmod files. This can be done (at any time) with:
@@ -276,7 +281,7 @@ so we can have `FC`, `CC` etc. set in the environment. So we make one. There
 is a copy in the `extra_modulefiles` directory. Copy it to the right place:
 
 ```bash
-cp -a extra_modulefiles/apple-clang $SPACK_ROOT/share/spack/lmod/darwin-sonoma-aarch64/Core/
+cp -a extra_modulefiles/apple-clang $SPACK_ROOT/share/spack/lmod/darwin-sequoia-aarch64/Core/
 ```
 
 Note that the Spack lmod directory won't be created until you run a first `spack install` command.
@@ -337,7 +342,7 @@ and add:
 
 ```csh
 source $LMOD_PKG/init/csh
-module use -a $SPACK_ROOT/share/spack/lmod/darwin-sonoma-aarch64/Core
+module use -a $SPACK_ROOT/share/spack/lmod/darwin-sequoia-aarch64/Core
 module load apple-clang openmpi esmf python py-pyyaml py-numpy pfunit pflogger fargparse zlib-ng
 module list
 setenv DYLD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${GEOSDIR}/lib
