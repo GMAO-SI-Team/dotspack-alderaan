@@ -10,7 +10,8 @@ For a mac with no admin rights, I often just [clone homebrew](https://docs.brew.
 the recommended way to install homebrew, but it works. 
 
 ```bash
-git clone https://github.com/Homebrew/brew homebrew
+mkdir -p $HOME/.homebrew
+git clone https://github.com/Homebrew/brew $HOME/.homebrew
 ```
 
 Then:
@@ -33,11 +34,13 @@ brew install bash
 brew install curl
 brew install cmake
 brew install openssl
+brew install rust
 ```
 
 NOTE 1: The install of gcc will be slow as they are built from source since we are using a non-standard location for homebrew.
 NOTE 2: We specify `gcc@14` as GEOS does not yet support GCC 14. But, it's possible something from brew will ask for GCC 14 and that
 might be installed.
+NOTE 3: Yes, `rust` is there. Some Python projects need it
 
 ### .zshenv
 
