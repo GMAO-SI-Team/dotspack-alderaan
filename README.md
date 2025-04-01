@@ -94,8 +94,7 @@ fi
 ```
 
 We need the `OS_NAME` variable to determine which lmod files to use as a laptop might be on 
-either ventura or sonoma.
-
+either `sonoma` or `sequoia` and the lmod files are different.
 
 ## Spack Configuration
 
@@ -118,58 +117,18 @@ For example, I got:
 ```bash
 ❯ spack compiler find
 ==> Added 4 new compilers to /Users/mathomp4/.spack/darwin/compilers.yaml
-    gcc@14.2.0  gcc@13.3.0 gcc@12.4.0  apple-clang@16.0.0
+    gcc@14.2.0  gcc@13.3.0 gcc@12.4.0  apple-clang@17.0.0
 ==> Compilers are defined in the following files:
-    /Users/mathomp4/.spack/darwin/compilers.yaml
+    /Users/mathomp4/.spack/packages.yaml
 ```
 
-Of these, we will focus on apple-clang. So now we need to fix up the compilers.yaml file to
-point to `gfortran-14` from brew. So first, run `which gfortran-14` to get the path to the
-gfortran-14 executable. On dagobah it is:
-```bash
-❯ which gfortran-14
-/Users/mathomp4/.homebrew/brew/bin/gfortran-14
-```
-
-Then, edit the compilers.yaml file with `spack config edit compilers` and change:
-
-```yaml
-- compiler:
-    spec: apple-clang@=16.0.0
-    paths:
-      cc: /usr/bin/clang
-      cxx: /usr/bin/clang++
-      f77: /usr/local/bin/gfortran
-      fc: /usr/local/bin/gfortran
-    flags: {}
-    operating_system: sonoma
-    target: aarch64
-    modules: []
-    environment: {}
-    extra_rpaths: []
-```
-to:
-```yaml
-- compiler:
-    spec: apple-clang@=16.0.0
-    paths:
-      cc: /usr/bin/clang
-      cxx: /usr/bin/clang++
-      f77: /Users/mathomp4/.homebrew/brew/bin/gfortran-14
-      fc: /Users/mathomp4/.homebrew/brew/bin/gfortran-14
-    flags: {}
-    operating_system: sonoma
-    target: aarch64
-    modules: []
-    environment: {}
-    extra_rpaths: []
-```
+Note that in Spack 1.0.0 and later, the compilers.yaml file is not used. Instead, the compilers are
+added to the `packages.yaml` file. So, you can ignore the compilers.yaml file.
 
 ### packages
 
 Now we can use `spack external find` to find the packages we need already in homebrew. But,
 we want to exclude some packages that experimentation has found should be built by spack.
-
 
 ```bash
 spack external find --exclude bison --exclude openssl \
@@ -184,7 +143,6 @@ Now edit the packages.yaml file with `spack config edit packages` and add the fo
 ```yaml
 packages:
   all:
-    compiler: [apple-clang@16.0.0]
     providers:
       mpi: [openmpi]
       blas: [openblas]
@@ -223,7 +181,7 @@ modules:
     - lmod
     lmod:
       core_compilers:
-      - apple-clang@16.0.0
+      - apple-clang@17.0.0
       hierarchy:
       - mpi
       hash_length: 0

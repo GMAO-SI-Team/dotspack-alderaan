@@ -1,6 +1,36 @@
 packages:
+  apple-clang:
+    externals:
+    - spec: apple-clang@17.0.0
+      prefix: /usr
+      extra_attributes:
+        compilers:
+          c: /usr/bin/clang
+          cxx: /usr/bin/clang++
+  gcc:
+    externals:
+    - spec: gcc@12.4.0 languages='c,c++,fortran'
+      prefix: /Users/mathomp4/.homebrew/brew
+      extra_attributes:
+        compilers:
+          c: /Users/mathomp4/.homebrew/brew/bin/gcc-12
+          cxx: /Users/mathomp4/.homebrew/brew/bin/g++-12
+          fortran: /Users/mathomp4/.homebrew/brew/bin/gfortran-12
+    - spec: gcc@13.3.0 languages='c,c++,fortran'
+      prefix: /Users/mathomp4/.homebrew/brew
+      extra_attributes:
+        compilers:
+          c: /Users/mathomp4/.homebrew/brew/bin/gcc-13
+          cxx: /Users/mathomp4/.homebrew/brew/bin/g++-13
+          fortran: /Users/mathomp4/.homebrew/brew/bin/gfortran-13
+    - spec: gcc@14.2.0 languages='c,c++,fortran'
+      prefix: /Users/mathomp4/.homebrew/brew
+      extra_attributes:
+        compilers:
+          c: /Users/mathomp4/.homebrew/brew/bin/gcc-14
+          cxx: /Users/mathomp4/.homebrew/brew/bin/g++-14
+          fortran: /Users/mathomp4/.homebrew/brew/bin/gfortran-14
   all:
-    compiler: [apple-clang@15.0.0]
     providers:
       mpi: [openmpi]
       blas: [openblas]
@@ -26,6 +56,8 @@ packages:
     variants: +extdata2g +fargparse +pflogger +pfunit ~pnetcdf
   sz3:
     variants: +hdf5
+  openmpi:
+    variants: +internal-hwloc +internal-libevent +internal-pmix
 
   coreutils:
     externals:
@@ -81,6 +113,10 @@ packages:
     externals:
     - spec: pkg-config@0.29.2
       prefix: /Users/mathomp4/.homebrew/brew
+  rust:
+    externals:
+    - spec: rust@1.85.0
+      prefix: /Users/mathomp4/.homebrew/brew/bin
   subversion:
     externals:
     - spec: subversion@1.14.3
