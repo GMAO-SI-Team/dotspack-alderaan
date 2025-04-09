@@ -1,4 +1,10 @@
 packages:
+  all:
+    providers:
+      mpi: [openmpi]
+      blas: [openblas, intel-oneapi-mkl]
+      lapack: [openblas, intel-oneapi-mkl]
+
   apple-clang:
     externals:
     - spec: apple-clang@17.0.0
@@ -30,11 +36,6 @@ packages:
           c: /Users/mathomp4/.homebrew/brew/bin/gcc-14
           cxx: /Users/mathomp4/.homebrew/brew/bin/g++-14
           fortran: /Users/mathomp4/.homebrew/brew/bin/gfortran-14
-  all:
-    providers:
-      mpi: [openmpi]
-      blas: [openblas]
-      lapack: [openblas]
   hdf5:
     variants: +fortran +szip +hl +threadsafe +mpi
     # Note that cdo requires threadsafe, but hdf5 doesn't
