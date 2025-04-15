@@ -1,6 +1,6 @@
 # dotspack for Alderaan
 
-This is a collection of .spack files for dagobah
+This is a collection of .spack files for alderaan
 
 ## Homebrew
 
