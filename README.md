@@ -98,6 +98,19 @@ either `sonoma` or `sequoia` and the lmod files are different.
 
 ## Spack Configuration
 
+### repos
+
+We rely on an extra repo for `geosgcm` and `geosfvdycore`. In `repos.yaml` we have:
+```yaml
+repos:
+- /Users/mathomp4/geosesm-spack
+```
+This is retreived by:
+```
+git clone git@github.com:GMAO-SI-Team/geosesm-spack.git
+```
+and you'll want to point this file to the correct location of the clone.
+
 ### config
 
 Set the number of `build_jobs` to 6 (or whatever you want)

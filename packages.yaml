@@ -48,7 +48,7 @@ packages:
     # Note that cdo requires threadsafe, but hdf5 doesn't
     # seem to want that with parallel. Hmm.
   netcdf-c:
-    variants: +hdf4 +dap
+    variants: ~hdf4 +dap
   esmf:
     variants: ~pnetcdf ~xerces
   cdo:
