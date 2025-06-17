@@ -1,4 +1,14 @@
 packages:
+  bash:
+    externals:
+    - spec: bash@5.2.37
+      prefix: /Users/mathomp4/.homebrew/brew
+  cmake:
+    externals:
+    - spec: cmake@4.0.2
+      prefix: /Users/mathomp4/.homebrew/brew
+    - spec: cmake@4.0.1
+      prefix: /Users/mathomp4/.homebrew/brew
   all:
     providers:
       mpi: [openmpi]
@@ -86,10 +96,6 @@ packages:
   automake:
     externals:
     - spec: automake@1.16.5
-      prefix: /Users/mathomp4/.homebrew/brew
-  cmake:
-    externals:
-    - spec: cmake@4.0.1
       prefix: /Users/mathomp4/.homebrew/brew
   cvs:
     externals:
