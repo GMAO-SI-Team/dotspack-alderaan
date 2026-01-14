@@ -169,8 +169,8 @@ spack compiler find
 For example, I got:
 ```bash
 ❯ spack compiler find
-==> Added 4 new compilers to /Users/mathomp4/.spack/darwin/packages.yaml
-    gcc@15.2.0 gcc@14.3.0 gcc@13.3.0 gcc@12.4.0 apple-clang@17.0.0
+==> Added 4 new compilers to /Users/mathomp4/.spack/darwin/compilers.yaml
+    gcc@15.2.0  gcc@14.3.0 gcc@12.4.0  apple-clang@17.0.0
 ==> Compilers are defined in the following files:
     /Users/mathomp4/.spack/packages.yaml
 ```
@@ -190,6 +190,42 @@ packages:
           cxx: /Users/mathomp4/.homebrew/brew/bin/g++-15
           fortran: /Users/mathomp4/.homebrew/brew/bin/gfortran-15
 ```
+
+### toolchains
+
+For simplicity, we'll also setup a toolchain file. An example is:
+```yaml
+
+toolchains:
+  apple-gfortran-15:
+  - spec: "%c=apple-clang"
+    when: "%c"
+  - spec: "%cxx=apple-clang"
+    when: "%cxx"
+  - spec: "%fortran=gcc@15"
+    when: "%fortran"
+  apple-nag:
+  - spec: "%c=apple-clang"
+    when: "%c"
+  - spec: "%cxx=apple-clang"
+    when: "%cxx"
+  - spec: "%fortran=nag"
+    when: "%fortran"
+```
+
+Now when installing packages, instead of doing:
+
+```bash
+spack install mapl %[virtuals=c,cxx] apple-clang@17.0.0 %[virtuals=fortran] gcc@15.2.0
+```
+
+we can do:
+
+```bash
+spack install mapl %apple-gfortran-15
+```
+
+Much simpler!
 
 ### packages
 
