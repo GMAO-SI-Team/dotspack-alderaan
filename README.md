@@ -386,27 +386,25 @@ spack concretize -Uf
 Now we install into the environment:
 
 ```bash
-spack install geosgcm %apple-gfortran-15
+spack install --only dependencies
 ```
 
-### Only Dependents?
+### Fix up the environment for CC/CXX/FC
 
-NOTE: You cannot use `--only dependents` with an environment. So this:
+At the moment, the environment will not have `CC`, `CXX` and `FC` set to *anything* which is
+not what we want. Unfortunately, this is a spack bug:
+
+
+For now, you can manually set them by doing:
 
 ```bash
-spack install --only dependents [geosgcm|mapl]
+spack config add env_vars:set:CC:$(which clang)
+spack config add env_vars:set:CXX:$(which clang++)
+spack config add env_vars:set:FC:$(which gfortran-15)
 ```
 
-only works in non-environment mode.
-
-I think if you wanted everything *but* geosgcm, you could do:
-
-```bash
-spack uninstall geosgcm
-```
-
-but it needs testing.
-
+NOTE: You probably need to make a new terminal/subshell and reactivate the environment for this to take effect.
+If I find a spack way, I'll update this.
 
 ## Not using Spack Environments
 
