@@ -333,48 +333,90 @@ modules:
     - LD_LIBRARY_PATH
 ```
 
+## Spack Environment
 
-## Spack Install
+The best way to manage all the bits needed for GEOSgcm and MAPL is to use a Spack Environment.
 
-Now we install packages.
+In the example below, we'll work on one for GEOSgcm.
+
+NOTE NOTE NOTE: At the moment, when you deactivate your spack environment, it will screw
+up your shell:
+
+https://github.com/spack/spack/issues/48391
+
+it removes things like homebrew from your PATH. So, until that is fixed, you might want to
+use the spack environment in a subshell, e.g.,
 
 ```bash
-spack install python py-numpy py-pyyaml py-ruamel-yaml
-spack install openmpi
-spack install esmf
-spack install gftl gftl-shared fargparse pfunit pflogger yafyaml
-spack install mepo
-spack install udunits
+zsh
+spack env activate geosgcm-gcc15
+# do stuff
+spack env deactivate
+exit
 ```
 
-This could just as well be:
+or a new terminal window.
+
+### Create environment
+
+```bash
+spack env create geosgcm-gcc15
+```
+
+### Activate environment
+
+```bash
+spack env activate geosgcm-gcc15
+```
+
+### Add packages
+
+```bash
+spack add geosgcm %apple-gfortran-15
+```
+
+### Concretize
+
+```bash
+spack concretize -Uf
+```
+
+### Spack Install
+
+Now we install into the environment:
+
+```bash
+spack install geosgcm %apple-gfortran-15
+```
+
+### Only Dependents?
+
+NOTE: You cannot use `--only dependents` with an environment. So this:
+
 ```bash
 spack install --only dependents [geosgcm|mapl]
 ```
 
-### Regenerate Modules
+only works in non-environment mode.
 
-Sometimes spack needs a nudge to generate lmod files. This can be done (at any time) with:
-
-```bash
-spack module lmod refresh --delete-tree -y
-```
-
-### Extra apple-clang module
-
-Spack is not able to create a modulefile for apple-clang since it is a
-builtin compiler or something. But, we want to have a modulefile for it
-so we can have `FC`, `CC` etc. set in the environment. So we make one. There
-is a copy in the `extra_modulefiles` directory. Copy it to the right place:
+I think if you wanted everything *but* geosgcm, you could do:
 
 ```bash
-cp -a extra_modulefiles/apple-clang $SPACK_ROOT/share/spack/lmod/darwin-sequoia-aarch64/Core/
+spack uninstall geosgcm
 ```
 
-Note that the Spack lmod directory won't be created until you run a first `spack install` command.
+but it needs testing.
 
 
-## Building GEOS and MAPL
+## Not using Spack Environments
+
+### spack install
+
+If you are not using spack environments, you can install GEOSgcm or MAPL by doing:
+
+```bash
+spack install geosgcm %apple-gfortran-15
+```
 
 ### spack load
 
