@@ -78,6 +78,7 @@ packages:
   openblas:
     prefer:
     - build_system=cmake
+    variants: ~dynamic_dispatch
 
   libpressio:
     variants: +blosc +blosc2 +fpzip +hdf5 +mpi +netcdf +sz +sz3 +zfp
