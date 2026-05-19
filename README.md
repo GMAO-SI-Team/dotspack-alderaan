@@ -26,7 +26,7 @@ These are based on those from spack-stack
 
 ```bash
 brew install coreutils
-brew install gcc
+brew install gcc@15
 brew install git
 brew install lmod
 brew install wget
