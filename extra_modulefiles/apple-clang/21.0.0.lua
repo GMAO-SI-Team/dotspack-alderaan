@@ -7,7 +7,7 @@ whatis([[Short description : Apple's Clang compiler]])
 whatis([[Configure options : unknown, software installed outside of Spack]])
 
 help([[Name   : apple-clang]])
-help([[Version: 17.0.0]])
+help([[Version: 21.0.0]])
 help([[Target : m1]])
 help()
 help([[Apple's Clang compiler]])

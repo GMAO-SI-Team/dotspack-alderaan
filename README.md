@@ -226,7 +226,7 @@ toolchains:
 Now when installing packages, instead of doing:
 
 ```bash
-spack install mapl %[virtuals=c,cxx] apple-clang@17.0.0 %[virtuals=fortran] gcc@15.2.0
+spack install mapl %[virtuals=c,cxx] apple-clang@21.0.0 %[virtuals=fortran] gcc@15.2.0
 ```
 
 we can do:
@@ -317,7 +317,7 @@ modules:
     - lmod
     lmod:
       core_compilers:
-      - apple-clang@17.0.0
+      - apple-clang@21.0.0
       hierarchy:
       - mpi
       hash_length: 0
