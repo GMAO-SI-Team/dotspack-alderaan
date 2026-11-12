@@ -21,12 +21,12 @@ packages:
 
   automake:
     externals:
-    - spec: automake@1.18.1
+    - spec: automake@1.20
       prefix: /Users/mathomp4/.homebrew/brew
 
   bash:
     externals:
-    - spec: bash@5.3.15
+    - spec: bash@5.3.20
       prefix: /Users/mathomp4/.homebrew/brew
 
   bison:
@@ -40,17 +40,22 @@ packages:
 
   cmake:
     externals:
-    - spec: cmake@4.4.3
+    - spec: cmake@4.4.5
       prefix: /Users/mathomp4/.homebrew/brew
+
+  curl:
+    externals:
+    - spec: curl@8.7.1+gssapi+ldap+nghttp2
+      prefix: /usr
 
   cvs:
     externals:
     - spec: cvs@1.12.13
       prefix: /Users/mathomp4/.homebrew/brew
 
-  diffutils:
+  doxygen:
     externals:
-    - spec: diffutils@3.12
+    - spec: doxygen@1.18.0+graphviz~mscgen
       prefix: /Users/mathomp4/.homebrew/brew
 
   esmf:
@@ -106,38 +111,38 @@ packages:
     - spec: gettext@1.0
       prefix: /Users/mathomp4/.homebrew/brew
 
-  git:
-    externals:
-    - spec: git@2.55.0~tcltk
-      prefix: /Users/mathomp4/.homebrew/brew
-    - spec: git@2.50.1~tcltk
-      prefix: /usr
-
   git-lfs:
     externals:
-    - spec: git-lfs@3.8.0
+    - spec: git-lfs@3.8.1
       prefix: /Users/mathomp4/.homebrew/brew
+
+  git:
+    externals:
+    - spec: git@2.56.1+tcltk
+      prefix: /Users/mathomp4/.homebrew/brew
+    - spec: git@2.54.0~tcltk
+      prefix: /usr
 
   go:
     externals:
-    - spec: go@1.27.1
+    - spec: go@1.27.4
       prefix: /Users/mathomp4/.homebrew/brew
 
   graphviz:
     externals:
-    - spec: graphviz@16.0.0
+    - spec: graphviz@16.1.1
       prefix: /Users/mathomp4/.homebrew/brew
 
   groff:
     externals:
-    - spec: groff@1.24.1
+    - spec: groff@1.25.0
       prefix: /Users/mathomp4/.homebrew/brew
-
-  libpressio:
-    variants: +blosc +blosc2 +fpzip +hdf5 +mpi +netcdf +sz +sz3 +zfp
 
   libpressio-tools:
     variants: +hdf5 +mpi +sperr
+
+  libpressio:
+    variants: +blosc +blosc2 +fpzip +hdf5 +mpi +netcdf +sz +sz3 +zfp
 
   libtool:
     externals:
@@ -146,7 +151,7 @@ packages:
 
   llvm:
     externals:
-    - spec: llvm@23.1.1 ~clang +flang
+    - spec: llvm@23.1.5 ~clang +flang
       prefix: /Users/mathomp4/.homebrew/brew
       extra_attributes:
         compilers:
@@ -173,7 +178,7 @@ packages:
 
   npm:
     externals:
-    - spec: npm@11.19.1
+    - spec: npm@11.20.0
       prefix: /Users/mathomp4/.homebrew/brew
 
   openblas:
@@ -191,38 +196,37 @@ packages:
 
   openssh:
     externals:
-    - spec: openssh@10.3p1
+    - spec: openssh@10.5p1
       prefix: /usr
 
   openssl:
     externals:
-    - spec: openssl@3.6.4
+    - spec: openssl@4.1.0
       prefix: /Users/mathomp4/.homebrew/brew
 
   perl:
     externals:
-    - spec: perl@5.44.0~cpanm+opcode+open+shared+threads
-      prefix: /Users/mathomp4/.homebrew/brew
     - spec: perl@5.34.1~cpanm+opcode+open+shared+threads
       prefix: /usr
 
   pkgconf:
     externals:
-    - spec: pkgconf@3.0.7
+    - spec: pkgconf@3.0.10
       prefix: /Users/mathomp4/.homebrew/brew
 
   python:
     externals:
-    - spec: python@3.14.7+bz2+ctypes+dbm~freethreading+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib+zstd
-      prefix: /Users/mathomp4/.homebrew/brew/opt/python@3.14
-    - spec: python@3.9.6+bz2+crypt+ctypes+dbm+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+    - spec: python@3.15.2+bz2+ctypes+curses+dbm~freethreading+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib+zstd
+      prefix: /Users/mathomp4/.homebrew/brew
+    - spec: python@3.9.6+bz2+crypt+ctypes+curses+dbm+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
       prefix: /usr
-
+    - spec: python@3.14.10+bz2+ctypes+dbm~freethreading+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib+zstd
+      prefix: /Users/mathomp4/.homebrew/brew/opt/python@3.14
     buildable: false
 
   rust:
     externals:
-    - spec: rust@1.98.1
+    - spec: rust@1.99.1
       prefix: /Users/mathomp4/.homebrew/brew
       extra_attributes:
         cargo: /Users/mathomp4/.homebrew/brew/bin/cargo
@@ -234,7 +238,12 @@ packages:
 
   subversion:
     externals:
-    - spec: subversion@1.14.5
+    - spec: subversion@1.15.0
+      prefix: /Users/mathomp4/.homebrew/brew
+
+  swig:
+    externals:
+    - spec: swig@4.5.1
       prefix: /Users/mathomp4/.homebrew/brew
 
   sz3:
@@ -247,10 +256,5 @@ packages:
 
   texinfo:
     externals:
-    - spec: texinfo@5.2
-      prefix: /usr/local
-
-  typescript:
-    externals:
-    - spec: typescript@7.0.2
+    - spec: texinfo@7.3
       prefix: /Users/mathomp4/.homebrew/brew
